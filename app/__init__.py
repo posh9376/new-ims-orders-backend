@@ -11,11 +11,11 @@ def create_app():
 
     # Database Configuration
     db_config = {
-        'user': os.getenv('user'),
-        'password': os.getenv('password'),
-        'host': os.getenv('host'),
-        'port': os.getenv('port'),
-        'database': os.getenv('name')
+        'user': os.getenv('POSTGRES_USER'),
+        'password': os.getenv('POSTGRES_PASSWORD'),
+        'host': os.getenv('POSTGRES_HOST'),
+        'port': os.getenv('DB_PORT'),
+        'database': os.getenv('POSTGRES_DB')
     }
     app.config['SQLALCHEMY_DATABASE_URI'] = (
         f"postgresql://{db_config['user']}:{db_config['password']}"
