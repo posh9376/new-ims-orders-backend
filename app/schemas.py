@@ -1,0 +1,23 @@
+from marshmallow import Schema, fields
+
+class OrdersSchema(Schema):
+    id = fields.Int(dump_only=True)
+    name = fields.Str(required=True)
+    cost = fields.Float(required=True, validate=lambda x: x >= 0)
+    quantity = fields.Int(required=True, validate=lambda x: x > 0)
+    status = fields.Str(required=True)
+    date_ordered = fields.Date(required=True)
+
+class ReceivedSchema(Schema):
+    id = fields.Int(dump_only=True)
+    order_id = fields.Int(required=True)
+    received_quantity = fields.Int(required=True, validate=lambda x: x > 0)
+    date_received = fields.Date(required=True)
+
+    orders = fields.Nested(OrdersSchema, only=("id", "name", "cost", "quantity", "status", "date_ordered"))
+
+# Schema Instances
+order_schema = OrdersSchema()
+orders_schema = OrdersSchema(many=True)
+received_schema = ReceivedSchema()
+receiveds_schema = ReceivedSchema(many=True)
