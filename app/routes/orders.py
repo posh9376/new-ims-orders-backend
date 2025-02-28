@@ -4,10 +4,6 @@ from ..schemas import order_schema, orders_schema
 
 orders_bp = Blueprint('orders', __name__, url_prefix='/orders')
 
-@orders_bp.route('/home', methods=['GET'])
-def home():
-    return jsonify({"message": "Welcome to my orders API"})
-
 @orders_bp.route('/', methods=['GET'])
 def get_orders():
     orders = Orders.query.all()
@@ -20,6 +16,8 @@ def create_order():
     try:
         data['cost'] = float(data['cost'])
         data['quantity'] = int(data['quantity'])
+        data['vat'] = float(data['vat'])
+        data['delivery_charges'] = float(data['delivery_charges'])
     except (ValueError, TypeError):
         return jsonify({'message': 'Invalid cost or quantity format'}), 400
 

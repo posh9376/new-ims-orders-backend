@@ -40,20 +40,27 @@ def create_app():
     app.register_blueprint(received_bp)
     app.register_blueprint(home_bp)
 
-   
-
     return app
 
 def create_tables():
-    """Executes raw SQL to create tables with relationships."""
+    """Executes raw SQL to create tables with all columns predefined."""
     raw_sql = """
     CREATE TABLE IF NOT EXISTS orders (
         id SERIAL PRIMARY KEY,
+        order_name VARCHAR(100),
+        order_description VARCHAR(250),
         name VARCHAR(50) NOT NULL,
         cost FLOAT NOT NULL,
+        space VARCHAR(50),
+        vat FLOAT DEFAULT 0,
         quantity INTEGER NOT NULL,
         status VARCHAR(50) NOT NULL,
-        date_ordered DATE NOT NULL
+        date_ordered DATE NOT NULL,
+        payment_status VARCHAR(50),
+        dispatch_status VARCHAR(50),
+        delivery_charges FLOAT DEFAULT 0,
+        reason VARCHAR(50) NULL,
+        initialiser VARCHAR(50) NULL
     );
 
     CREATE TABLE IF NOT EXISTS received (
