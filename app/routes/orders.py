@@ -54,9 +54,9 @@ def update_order(id):
     db.session.commit()
     return jsonify(order_schema.dump(order))
 
-@orders_bp.route('/<int:id>', methods=['DELETE'])
-def delete_order(id):
-    order = Orders.query.get_or_404(id)
+@orders_bp.route('/<int:ID>', methods=['DELETE'])
+def delete_order(ID):
+    order = Orders.query.get_or_404(ID)
     
     if order.received:
         return jsonify({'message': 'Cannot delete order with received items'}), 400
@@ -64,3 +64,15 @@ def delete_order(id):
     db.session.delete(order)
     db.session.commit()
     return jsonify({'message': 'Order deleted successfully'}), 200
+
+@orders_bp.route('/<int:ID>/status', methods=['PUT'])
+def update_order_status(ID):
+    order = Orders.query.get_or_404(ID)
+    data = request.get_json()
+
+    if 'status' not in data:
+        return jsonify({'message': 'Status is required'}), 400
+
+    order.status = data['status']
+    db.session.commit()
+    return jsonify(order_schema.dump(order))

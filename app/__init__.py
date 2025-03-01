@@ -11,15 +11,15 @@ def create_app():
 
     # Database Configuration
     db_config = {
-        'user': os.getenv('POSTGRES_USER'),
-        'password': os.getenv('POSTGRES_PASSWORD'),
-        'host': os.getenv('POSTGRES_HOST'),
-        'port': os.getenv('DB_PORT'),
-        'database': os.getenv('POSTGRES_DB')
+        'POSTGRES_USER': os.getenv('POSTGRES_USER'),
+        'POSTGRES_PASSWORD': os.getenv('POSTGRES_PASSWORD'),
+        'POSTGRES_HOST': os.getenv('POSTGRES_HOST'),
+        'DB_PORT': os.getenv('DB_PORT'),
+        'POSTGRES_DB': os.getenv('POSTGRES_DB')
     }
     app.config['SQLALCHEMY_DATABASE_URI'] = (
-        f"postgresql://{db_config['user']}:{db_config['password']}"
-        f"@{db_config['host']}:{db_config['port']}/{db_config['database']}"
+        f"postgresql://{db_config['POSTGRES_USER']}:{db_config['POSTGRES_PASSWORD']}"
+        f"@{db_config['POSTGRES_HOST']}:{db_config['DB_PORT']}/{db_config['POSTGRES_DB']}"
     )
 
     # Initialize Extensions (Only keeping CORS)
@@ -74,11 +74,11 @@ def create_tables():
 
     # Connect directly using psycopg2
     conn = psycopg2.connect(
-        dbname=os.getenv('name'),
-        user=os.getenv('user'),
-        password=os.getenv('password'),
-        host=os.getenv('host'),
-        port=os.getenv('port')
+        POSTGRES_DB=os.getenv('POSTGRES_DB'),
+        POSTGRES_USER=os.getenv('POSTGRES_USER'),
+        POSTGRES_PASSWORD=os.getenv('POSTGRES_PASSWORD'),
+        POSTGRES_HOST=os.getenv('POSTGRES_HOST'),
+        DB_PORT=os.getenv('DB_PORT')
     )
 
     with conn.cursor() as cur:
