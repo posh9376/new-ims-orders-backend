@@ -40,11 +40,6 @@ def create_app():
     app.register_blueprint(received_bp)
     app.register_blueprint(home_bp)
 
-    @app.route('/github-webhook/', methods=['POST'])
-    def github_webhook():
-        data = request.json
-        print("Received Webhook:", data)  # Log the webhook data
-        return jsonify({"message": "Webhook received"}), 200
 
     return app
 
