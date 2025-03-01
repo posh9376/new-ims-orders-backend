@@ -74,12 +74,13 @@ def create_tables():
 
     # Connect directly using psycopg2
     conn = psycopg2.connect(
-        POSTGRES_DB=os.getenv('POSTGRES_DB'),
-        POSTGRES_USER=os.getenv('POSTGRES_USER'),
-        POSTGRES_PASSWORD=os.getenv('POSTGRES_PASSWORD'),
-        POSTGRES_HOST=os.getenv('POSTGRES_HOST'),
-        DB_PORT=os.getenv('DB_PORT')
+    dbname=os.getenv('POSTGRES_DB'),
+    user=os.getenv('POSTGRES_USER'),
+    password=os.getenv('POSTGRES_PASSWORD'),
+    host=os.getenv('POSTGRES_HOST'),
+    port=os.getenv('DB_PORT')
     )
+
 
     with conn.cursor() as cur:
         cur.execute(raw_sql)
