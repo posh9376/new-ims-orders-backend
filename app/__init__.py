@@ -50,7 +50,7 @@ def create_app():
         if not data or 'user_id' not in data:
             return jsonify({'message': 'User ID is required'}), 400
         
-        access_token = create_access_token(identity=data['user_id'])
+        access_token = create_access_token(identity=str(data['user_id']))
         return jsonify(access_token=access_token)
 
 
