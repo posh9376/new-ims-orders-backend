@@ -1,7 +1,7 @@
 from marshmallow import Schema, fields
-
 class OrdersSchema(Schema):
     id = fields.Int(dump_only=True)
+    user_id=fields.Int(required=True)
     order_name = fields.Str(required=True)
     order_description = fields.Str(required=True)
     name = fields.Str(required=True)
