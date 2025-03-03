@@ -19,11 +19,10 @@ def get_orders():
 @orders_bp.route('/', methods=['POST'])
 @jwt_required()
 def create_order():
-    current_user = get_jwt_identity()  # This is the logged-in user's ID
+    current_user = get_jwt_identity()
     data = request.get_json()
 
-    # Ensure user_id is set from JWT identity
-    data['user_id'] = current_user  
+    data['user_id'] = current_user
 
     try:
         data['cost'] = float(data['cost'])
