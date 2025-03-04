@@ -8,7 +8,7 @@ class Users(db.Model):
     email = db.Column(db.String(100), nullable=False, unique=True)
     phone_number = db.Column(db.String(20),nullable=False)
     role_id = db.Column(db.Integer,nullable=False)
-    password_hash = db.Column(db.String(255), nullable=False)
+    password = db.Column(db.String(255), nullable=False)
 
     orders = db.relationship('Orders', back_populates='user', cascade="all, delete-orphan", lazy=True)
 
