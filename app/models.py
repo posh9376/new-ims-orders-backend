@@ -1,27 +1,28 @@
 from .extensions import db
 
-class Users(db.Model):
-    __tablename__ = 'users'
+class User(db.Model):
+    __tablename__ = 'user'  
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False, unique=True)
     email = db.Column(db.String(100), nullable=False, unique=True)
-    phone_number = db.Column(db.String(20),nullable=False)
-    role_id = db.Column(db.Integer,nullable=False)
+    phone_number = db.Column(db.String(20), nullable=False)
+    role_id = db.Column(db.Integer, nullable=False)
     password = db.Column(db.String(255), nullable=False)
 
     orders = db.relationship('Orders', back_populates='user', cascade="all, delete-orphan", lazy=True)
+
 
 class Orders(db.Model):
     __tablename__ = 'orders'
 
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     order_name = db.Column(db.String(50), nullable=False)
     order_description = db.Column(db.String(250), nullable=False)
     name = db.Column(db.String(50), nullable=False)
     cost = db.Column(db.Float, nullable=False)
-    space = db.Column(db.String(50), nullable=False)
+    vendor_name = db.Column(db.String(100),nullable=False)
     vat = db.Column(db.Float, nullable=False)
     quantity = db.Column(db.Integer, nullable=False)
     status = db.Column(db.String(50), nullable=False)
@@ -32,7 +33,7 @@ class Orders(db.Model):
     reason = db.Column(db.String(50), nullable=True)
     initialiser = db.Column(db.String(50), nullable=True)
 
-    user = db.relationship('Users', back_populates='orders')
+    user = db.relationship('User', back_populates='orders') 
     received = db.relationship('Received', back_populates='order', cascade="all, delete-orphan", lazy=True)
 
 class Received(db.Model):

@@ -58,8 +58,17 @@ def create_app():
     return app
 
 def create_tables():
-    """Executes raw SQL to create tables with all columns predefined."""
+    """Executes raw SQL to create tables with all columns predefined, including foreign keys."""
     raw_sql = """
+    CREATE TABLE IF NOT EXISTS "user" (  -- Fix: Enclosed "user" in double quotes
+        id SERIAL PRIMARY KEY,
+        name VARCHAR(50) NOT NULL UNIQUE,
+        email VARCHAR(100) NOT NULL UNIQUE,
+        phone_number VARCHAR(20) NOT NULL,
+        role_id INTEGER NOT NULL,
+        password VARCHAR(255) NOT NULL
+    );
+
     CREATE TABLE IF NOT EXISTS orders (
         id SERIAL PRIMARY KEY,
         user_id INTEGER NOT NULL,
@@ -67,7 +76,7 @@ def create_tables():
         order_description VARCHAR(250),
         name VARCHAR(50) NOT NULL,
         cost FLOAT NOT NULL,
-        space VARCHAR(50),
+        vendor_name VARCHAR(100) NOT NULL,
         vat FLOAT DEFAULT 0,
         quantity INTEGER NOT NULL,
         status VARCHAR(50) NOT NULL,
@@ -76,7 +85,8 @@ def create_tables():
         dispatch_status VARCHAR(50),
         delivery_charges FLOAT DEFAULT 0,
         reason VARCHAR(50) NULL,
-        initialiser VARCHAR(50) NULL
+        initialiser VARCHAR(50) NULL,
+        CONSTRAINT fk_user FOREIGN KEY(user_id) REFERENCES "user"(id) ON DELETE CASCADE  -- Fix: "user"
     );
 
     CREATE TABLE IF NOT EXISTS received (
@@ -86,6 +96,7 @@ def create_tables():
         date_received DATE NOT NULL,
         CONSTRAINT fk_order FOREIGN KEY(order_id) REFERENCES orders(id) ON DELETE CASCADE
     );
+
     """
 
     # Connect directly using psycopg2

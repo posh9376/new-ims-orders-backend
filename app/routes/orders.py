@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request
-from app.models import Orders, db
+from app.models import Orders, db,User
 from app.schemas import order_schema, orders_schema
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from flask_jwt_extended.exceptions import NoAuthorizationError
@@ -22,25 +22,42 @@ def create_order():
     current_user = get_jwt_identity()
     data = request.get_json()
 
+    if not data:
+        return jsonify({'message': 'No data provided'}), 400
+
+    # Ensure the current user ID is included
     data['user_id'] = current_user
 
-    try:
-        data['cost'] = float(data['cost'])
-        data['quantity'] = int(data['quantity'])
-        data['vat'] = float(data['vat'])
-        data['delivery_charges'] = float(data['delivery_charges'])
-    except (ValueError, TypeError):
-        return jsonify({'message': 'Invalid cost or quantity format'}), 400
+    # Check if user exists in the database
+    user = User.query.get(current_user)
+    if not user:
+        return jsonify({'error': f'User with id {current_user} does not exist'}), 400
 
+    # Validate and convert data types
+    try:
+        data['cost'] = float(data.get('cost', 0))
+        data['quantity'] = int(data.get('quantity', 0))
+        data['vat'] = float(data.get('vat', 0))
+        data['delivery_charges'] = float(data.get('delivery_charges', 0))
+    except ValueError:
+        return jsonify({'message': 'Invalid cost, quantity, vat, or delivery_charges format'}), 400
+
+    # Validate schema
     errors = order_schema.validate(data)
     if errors:
         return jsonify(errors), 400
 
-    new_order = Orders(**data)
-    db.session.add(new_order)
-    db.session.commit()
-    
+    # Create and save the new order
+    try:
+        new_order = Orders(**data)
+        db.session.add(new_order)
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': str(e)}), 500  # Return any database error
+
     return jsonify(order_schema.dump(new_order)), 201
+
 
 
 @orders_bp.route('/<int:id>', methods=['GET'])
