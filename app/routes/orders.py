@@ -42,12 +42,11 @@ def create_order():
     except ValueError:
         return jsonify({'message': 'Invalid cost, quantity, vat, or delivery_charges format'}), 400
 
-    # Validate schema
     errors = order_schema.validate(data)
     if errors:
         return jsonify(errors), 400
 
-    # Create and save the new order
+
     try:
         new_order = Orders(**data)
         db.session.add(new_order)
@@ -66,11 +65,17 @@ def get_order(id):
     order = Orders.query.get_or_404(id)
     return jsonify(order_schema.dump(order))
 
+from flask_jwt_extended import jwt_required, get_jwt_identity
+
 @orders_bp.route('/<int:id>', methods=['PUT'])
 @jwt_required()
 def update_order(id):
+    user_id = get_jwt_identity()
+
     order = Orders.query.get_or_404(id)
+
     data = request.get_json()
+    data['user_id'] = user_id
 
     try:
         data['cost'] = float(data['cost'])
@@ -82,8 +87,10 @@ def update_order(id):
     if errors:
         return jsonify(errors), 400
 
+
     Orders.query.filter_by(id=id).update(data)
     db.session.commit()
+
     return jsonify(order_schema.dump(order))
 
 @orders_bp.route('/<int:id>', methods=['DELETE'])
