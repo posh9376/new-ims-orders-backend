@@ -26,7 +26,7 @@ def create_app():
 
     # Initialize Extensions (Only keeping CORS)
     db.init_app(app)
-    cors.init_app(app)
+    cors.init_app(app,resources={r"/*": {"origins": "*", "allow_headers": "*", "expose_headers": "*"}})
     jwt = JWTManager(app)
 
 
