@@ -11,7 +11,6 @@ def handle_missing_token(error):
     return jsonify({'message': 'JWT token is missing or invalid'}), 401
 
 @orders_bp.route('/', methods=['GET'])
-@jwt_required()
 def get_orders():
     orders = Orders.query.all()
     return jsonify(orders_schema.dump(orders))
@@ -65,8 +64,6 @@ def get_order(id):
     order = Orders.query.get_or_404(id)
     return jsonify(order_schema.dump(order))
 
-from flask_jwt_extended import jwt_required, get_jwt_identity
-
 @orders_bp.route('/<int:id>', methods=['PUT'])
 @jwt_required()
 def update_order(id):
@@ -94,7 +91,6 @@ def update_order(id):
     return jsonify(order_schema.dump(order))
 
 @orders_bp.route('/<int:id>', methods=['DELETE'])
-@jwt_required()
 def delete_order(id):
     order = Orders.query.get_or_404(id)
     
@@ -106,7 +102,6 @@ def delete_order(id):
     return jsonify({'message': 'Order deleted successfully'}), 200
 
 @orders_bp.route('/<int:id>/status', methods=['PUT'])
-@jwt_required()
 def update_order_status(id):
     order = Orders.query.get_or_404(id)
     data = request.get_json()

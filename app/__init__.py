@@ -70,24 +70,26 @@ def create_tables():
     );
 
     CREATE TABLE IF NOT EXISTS orders (
-        id SERIAL PRIMARY KEY,
-        user_id INTEGER NOT NULL,
-        order_name VARCHAR(100),
-        order_description VARCHAR(250),
-        name VARCHAR(50) NOT NULL,
-        cost FLOAT NOT NULL,
-        vendor_name VARCHAR(100) NOT NULL,
-        vat FLOAT DEFAULT 0,
-        quantity INTEGER NOT NULL,
-        status VARCHAR(50) NOT NULL,
-        date_ordered DATE NOT NULL,
-        payment_status VARCHAR(50),
-        dispatch_status VARCHAR(50),
-        delivery_charges FLOAT DEFAULT 0,
-        reason VARCHAR(50) NULL,
-        initialiser VARCHAR(50) NULL,
-        CONSTRAINT fk_user FOREIGN KEY(user_id) REFERENCES "user"(id) ON DELETE CASCADE  -- Fix: "user"
-    );
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL,
+    order_name VARCHAR(100),
+    order_description VARCHAR(250),
+    name VARCHAR(50) NOT NULL,
+    cost FLOAT NOT NULL,
+    vendor_id INTEGER NOT NULL,
+    vat FLOAT DEFAULT 0,
+    quantity INTEGER NOT NULL,
+    status VARCHAR(50) NOT NULL,
+    date_ordered DATE NOT NULL,
+    payment_status VARCHAR(50),
+    dispatch_status VARCHAR(50),
+    delivery_charges FLOAT DEFAULT 0,
+    reason VARCHAR(50) NULL,
+    initialiser VARCHAR(50) NULL,
+    CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES "user"(id) ON DELETE CASCADE, 
+    CONSTRAINT fk_vendor FOREIGN KEY (vendor_id) REFERENCES vendors(id) ON DELETE CASCADE
+);
+
 
     CREATE TABLE IF NOT EXISTS received (
         id SERIAL PRIMARY KEY,
@@ -95,6 +97,7 @@ def create_tables():
         received_quantity INTEGER NOT NULL,
         date_received DATE NOT NULL,
         CONSTRAINT fk_order FOREIGN KEY(order_id) REFERENCES orders(id) ON DELETE CASCADE
+        
     );
 
     """

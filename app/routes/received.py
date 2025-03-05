@@ -12,15 +12,12 @@ def handle_missing_token(error):
     return jsonify({'message': 'JWT token is missing or invalid'}), 401
 
 @received_bp.route('/', methods=['GET'])
-@jwt_required()
 def get_all_received():
     received = Received.query.all()
     return jsonify(receiveds_schema.dump(received))
 
 @received_bp.route('/', methods=['POST'])
-@jwt_required()
 def create_received():
-    current_user = get_jwt_identity()
     data = request.get_json()
 
     try:
@@ -44,7 +41,6 @@ def create_received():
     return jsonify(received_schema.dump(new_received)), 201
 
 @received_bp.route('/<int:id>', methods=['GET'])
-@jwt_required()
 def get_received(id):
     received = Received.query.get_or_404(id)
     return jsonify(received_schema.dump(received))
