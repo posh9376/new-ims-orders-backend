@@ -59,7 +59,6 @@ def create_order():
 
 
 @orders_bp.route('/<int:id>', methods=['GET'])
-@jwt_required()
 def get_order(id):
     order = Orders.query.get_or_404(id)
     return jsonify(order_schema.dump(order))
