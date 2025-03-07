@@ -27,8 +27,10 @@ def create_app():
 
     # Initialize Extensions (Only keeping CORS)
     db.init_app(app)
-    CORS(app,resources={r"/*": {"origins": "*", "allow_headers": "*", "expose_headers": "*"}})
+    CORS(app,resources={r"/*": {"origins": "*", "allow_headers": "*", "expose_headers": "*"}},supports_credentials=True)
     jwt = JWTManager(app)
+
+    
 
 
     # Create tables using raw SQL
