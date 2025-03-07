@@ -2,7 +2,8 @@ import os
 import psycopg2
 from dotenv import load_dotenv
 from flask import Flask, request, jsonify
-from .extensions import db, cors
+from .extensions import db
+from flask_cors import CORS
 from flask_jwt_extended import JWTManager, create_access_token
 
 load_dotenv()
@@ -26,7 +27,7 @@ def create_app():
 
     # Initialize Extensions (Only keeping CORS)
     db.init_app(app)
-    cors.init_app(app,resources={r"/*": {"origins": "*", "allow_headers": "*", "expose_headers": "*"}})
+    CORS(app,resources={r"/*": {"origins": "*", "allow_headers": "*", "expose_headers": "*"}})
     jwt = JWTManager(app)
 
 
