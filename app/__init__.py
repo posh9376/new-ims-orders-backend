@@ -25,7 +25,7 @@ def create_app():
     )
     app.config['SECRET_KEY'] = os.getenv('JWT_SECRET_KEY', 'your_secret_key')
 
-    # Initialize Extensions (Only keeping CORS)
+   
     db.init_app(app)
     CORS(app,resources={r"/*": {"origins": "*", "allow_headers": "*", "expose_headers": "*"}},supports_credentials=True)
     jwt = JWTManager(app)
@@ -38,7 +38,7 @@ def create_app():
             response.headers["Access-Control-Allow-Origin"] = "*"
             response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS"
             response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
-            response.headers["Content-Type"] = "application/json"  # 🔥 Set JSON Content-Type
+            response.headers["Content-Type"] = "application/json"  # Set JSON Content-Type
             return response, 200
 
     @app.after_request
@@ -48,7 +48,7 @@ def create_app():
         response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS"
         response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
         
-        # 🔥 Ensure the response is always JSON
+        #  Ensure the response is always JSON
         if response.content_type == "text/html; charset=utf-8":
             response.headers["Content-Type"] = "application/json"
         
